@@ -1,7 +1,7 @@
 import unittest
-from plural import endsin, pluralize, expects, RuleError
+from plural import endsin, pluralize, explain, RuleError
 
-class TestEndsIn(unittest.TestCase):
+class Testendsin(unittest.TestCase):
 
     def test_basic(self):
         self.assertTrue(endsin(  0, 0))
@@ -90,24 +90,24 @@ class TestPluralize(unittest.TestCase):
         self.assertEqual(pluralize(self.sgwordlist, 20, self.SCOTTISHGAELIC), "word3")
         self.assertEqual(pluralize(self.sgwordlist, 21, self.SCOTTISHGAELIC), "word3")
 
-class TestExpects(unittest.TestCase):
+class TestExplain(unittest.TestCase):
     
     def test_1form(self):
         # expect rule 0 to have 1 form
-        self.assertEqual(len(expects(0)), 1)
+        self.assertEqual(len(explain(0)), 1)
     
     def test_2forms(self):
         # expect rules 1 and 2 to have 2 forms
-        self.assertEqual(len(expects(1)), 2)
-        self.assertEqual(len(expects(2)), 2)
+        self.assertEqual(len(explain(1)), 2)
+        self.assertEqual(len(explain(2)), 2)
 
     def test_3forms(self):
         # expect rule 3 to have 3 forms
-        self.assertEqual(len(expects(3)), 3)
+        self.assertEqual(len(explain(3)), 3)
     
     def test_4forms(self):
         # expect rule 4 to have 4 forms
-        self.assertEqual(len(expects(4)), 4)
+        self.assertEqual(len(explain(4)), 4)
 
 if __name__ == '__main__':
     unittest.main()

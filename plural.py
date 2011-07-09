@@ -14,7 +14,7 @@ def pluralize(wordlist, count, rule):
 
 # The rule compiler will automatically infer an "everything else" clause at
 # the end of each rule
-rule_definition = {
+_rule_definition = {
     # rule 0: Asian, only one form
     0: ( ),
     
@@ -34,16 +34,16 @@ rule_definition = {
         "count >= 3 and count <= 19",),
 }
 
-def rulecompiler():
+def _rulecompiler():
     # bring in the rule definitions
-    global rule_definition
+    global _rule_definition
     
     rulefuncs = []
     # read each rule definition
-    for rule in rule_definition:
+    for rule in _rule_definition:
         rulefuncs.insert(rule, [])
         # read each rule function definition
-        for str in rule_definition[rule]:
+        for str in _rule_definition[rule]:
             str = "lambda count: " + str
             # compile the rule function and put it into the rule fns list
             rulefuncs[rule].append(eval(compile(str, '<string>', 'eval')))
@@ -54,23 +54,23 @@ def rulecompiler():
     # convert to a tuple for immutability
     return tuple(rulefuncs)
 
-def expects(rule):
+def explain(rule):
     """
     Returns a description of the expected word list for a rule.
     """
-    global rule_definition
+    global _rule_definition
     
     # special case rule 0, since there's no "else"
     if rule == 0:
         return ("everything",)
     
-    return tuple(list(rule_definition[rule]) + ["everything else"])
+    return tuple(list(_rule_definition[rule]) + ["everything else"])
     
-def getrules(rule, rule_funcs = rulecompiler()):
+def _getrules(rule, rule_funcs = _rulecompiler()):
     """
     Returns a tuple of functions which can be used to test a count and return the index of the correct word form
     """
-    # maintenance note: rulecompiler() is expensive and should only
+    # maintenance note: _rulecompiler() is expensive and should only
     # be called once, that's why it's a default parameter
     return rule_funcs[rule]
     
@@ -80,7 +80,7 @@ def index(count, rule):
     Determines the index into a wordlist for a particular count and rule.
     """
     try:
-        ruleset = getrules(rule)
+        ruleset = _getrules(rule)
     except IndexError:
         raise RuleError("Invalid rule requested: {0}".format(rule))
         
