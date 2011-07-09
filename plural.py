@@ -12,8 +12,8 @@ def pluralize(wordlist, count, rule):
     """
     return wordlist[index(count, rule)]
 
-# The rule compiler will automatically infer an "everything else" clause at the
-# end of each ruleset
+# The rule compiler will automatically infer an "everything else" clause at
+# the end of each ruleset
 rule_definition = {
     # rule 0: Asian, only one form
     0: ( ),
@@ -56,28 +56,16 @@ def createrulefuncs():
 
 def expects(rule):
     """
-    Returns a count and description of the expected word list for a rule.
+    Returns a description of the expected word list for a rule.
     """
-    # rule 0: only one form
+    global rule_definition
+    
+    # special case rule 0, since there's no "else"
     if rule == 0:
         return ("everything",)
     
-    # rule 1: Germanic/English 2-forms (singular, plural)
-    if rule == 1:
-        return ("is 1", "everything else")
+    return tuple(list(rule_definition[rule]) + ["everything else"])
     
-    # rule 2: Romance (0/1 singular, plural)
-    if rule == 2:
-        return ("is 0 or 1", "everything else")
-    
-    # rule 3: Latvian (0, ends in 1 other than 11, everything else)
-    if rule == 3:
-        return ("is 0", "ends in 1, not 11", "everything else")
-    
-    # rule 4: Scottish Gaelic (1/11, 2/12, 3-19, everything else)
-    if rule == 4:
-        return ("is 1 or 11", "is 2 or 12", "others between 3 and 19", "everything else")
-
 def getrules(rule, rule_funcs = createrulefuncs()):
     """
     Returns a tuple of functions which can be used to test a count and return the index of the correct word form
