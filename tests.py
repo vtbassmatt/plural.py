@@ -1,5 +1,5 @@
 import unittest
-from plural import endsin, index, pluralize, expects
+from plural import endsin, pluralize, expects
 
 class TestEndsIn(unittest.TestCase):
 
@@ -32,34 +32,6 @@ class TestEndsIn(unittest.TestCase):
         self.assertRaises(TypeError, endsin, "blah", 0)
         self.assertRaises(TypeError, endsin, 1.5, 1)
 
-class TestIndex(unittest.TestCase):
-    
-    def test_rule0(self):
-        self.assertEqual(index(0, 0), 0)
-        self.assertEqual(index(1, 0), 0)
-        self.assertEqual(index(2, 0), 0)
-
-    def test_rule1(self):
-        self.assertEqual(index(0, 1), 1)
-        self.assertEqual(index(1, 1), 0)
-        self.assertEqual(index(2, 1), 1)
-
-    def test_rule2(self):
-        self.assertEqual(index(0, 2), 0)
-        self.assertEqual(index(1, 2), 0)
-        self.assertEqual(index(2, 2), 1)
-
-    def test_rule3(self):
-        self.assertEqual(index( 0, 3), 0)
-        self.assertEqual(index( 1, 3), 1)
-        self.assertEqual(index( 2, 3), 2)
-        self.assertEqual(index(11, 3), 2)
-        self.assertEqual(index(21, 3), 1)
-        self.assertEqual(index(31, 3), 1)
-        self.assertEqual(index(12, 3), 2)
-        self.assertEqual(index(22, 3), 2)
-        self.assertEqual(index(32, 3), 2)
-
 class TestPluralize(unittest.TestCase):
 
     def setUp(self):
@@ -69,6 +41,8 @@ class TestPluralize(unittest.TestCase):
         self.FRENCH  = 2
         self.latvianwordlist = ("word0", "word1", "word2")
         self.LATVIAN = 3
+        self.sgwordlist = ("word0", "word1", "word2", "word3")
+        self.SCOTTISHGAELIC = 4
     
     def test_rule0(self):            
         self.assertEqual(pluralize(self.wordlist, 0, self.CHINESE), "word")
@@ -86,9 +60,31 @@ class TestPluralize(unittest.TestCase):
         self.assertEqual(pluralize(self.wordlist, 2, self.FRENCH), "words")
 
     def test_rule3(self):            
-        self.assertEqual(pluralize(self.latvianwordlist, 0, self.LATVIAN), "word0")
-        self.assertEqual(pluralize(self.latvianwordlist, 1, self.LATVIAN), "word1")
-        self.assertEqual(pluralize(self.latvianwordlist, 2, self.LATVIAN), "word2")
+        self.assertEqual(pluralize(self.latvianwordlist,  0, self.LATVIAN), "word0")
+        self.assertEqual(pluralize(self.latvianwordlist,  1, self.LATVIAN), "word1")
+        self.assertEqual(pluralize(self.latvianwordlist,  2, self.LATVIAN), "word2")
+        self.assertEqual(pluralize(self.latvianwordlist,  3, self.LATVIAN), "word2")
+        self.assertEqual(pluralize(self.latvianwordlist, 10, self.LATVIAN), "word2")
+        self.assertEqual(pluralize(self.latvianwordlist, 11, self.LATVIAN), "word2")
+        self.assertEqual(pluralize(self.latvianwordlist, 12, self.LATVIAN), "word2")
+        self.assertEqual(pluralize(self.latvianwordlist, 20, self.LATVIAN), "word2")
+        self.assertEqual(pluralize(self.latvianwordlist, 21, self.LATVIAN), "word1")
+        self.assertEqual(pluralize(self.latvianwordlist, 22, self.LATVIAN), "word2")
+        self.assertEqual(pluralize(self.latvianwordlist, 23, self.LATVIAN), "word2")
+
+    def test_rule4(self):            
+        self.assertEqual(pluralize(self.sgwordlist,  0, self.SCOTTISHGAELIC), "word3")
+        self.assertEqual(pluralize(self.sgwordlist,  1, self.SCOTTISHGAELIC), "word0")
+        self.assertEqual(pluralize(self.sgwordlist,  2, self.SCOTTISHGAELIC), "word1")
+        self.assertEqual(pluralize(self.sgwordlist,  3, self.SCOTTISHGAELIC), "word2")
+        self.assertEqual(pluralize(self.sgwordlist,  4, self.SCOTTISHGAELIC), "word2")
+        self.assertEqual(pluralize(self.sgwordlist, 10, self.SCOTTISHGAELIC), "word2")
+        self.assertEqual(pluralize(self.sgwordlist, 11, self.SCOTTISHGAELIC), "word0")
+        self.assertEqual(pluralize(self.sgwordlist, 12, self.SCOTTISHGAELIC), "word1")
+        self.assertEqual(pluralize(self.sgwordlist, 13, self.SCOTTISHGAELIC), "word2")
+        self.assertEqual(pluralize(self.sgwordlist, 19, self.SCOTTISHGAELIC), "word2")
+        self.assertEqual(pluralize(self.sgwordlist, 20, self.SCOTTISHGAELIC), "word3")
+        self.assertEqual(pluralize(self.sgwordlist, 21, self.SCOTTISHGAELIC), "word3")
 
 class TestExpects(unittest.TestCase):
     
@@ -104,6 +100,10 @@ class TestExpects(unittest.TestCase):
     def test_3forms(self):
         # expect rule 3 to have 3 forms
         self.assertEqual(len(expects(3)), 3)
+    
+    def test_4forms(self):
+        # expect rule 4 to have 4 forms
+        self.assertEqual(len(expects(4)), 4)
 
 if __name__ == '__main__':
     unittest.main()
