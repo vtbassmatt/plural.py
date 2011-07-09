@@ -13,7 +13,7 @@ def pluralize(wordlist, count, rule):
     return wordlist[index(count, rule)]
 
 # The rule compiler will automatically infer an "everything else" clause at
-# the end of each ruleset
+# the end of each rule
 rule_definition = {
     # rule 0: Asian, only one form
     0: ( ),
@@ -34,20 +34,20 @@ rule_definition = {
         "count >= 3 and count <= 19",),
 }
 
-def createrulefuncs():
+def rulecompiler():
     # bring in the rule definitions
     global rule_definition
     
     rulefuncs = []
-    # read each ruleset
+    # read each rule definition
     for rule in rule_definition:
         rulefuncs.insert(rule, [])
-        # read each rule
+        # read each rule function definition
         for str in rule_definition[rule]:
             str = "lambda count: " + str
-            # compile the rule and put it into the rule functions list
+            # compile the rule function and put it into the rule fns list
             rulefuncs[rule].append(eval(compile(str, '<string>', 'eval')))
-        # for each ruleset, there's an implied "everything else" at the end
+        # for each rule, there's an implied "everything else" at the end
         rulefuncs[rule].append(lambda count: True)
         # convert to a tuple for immutability
         rulefuncs[rule] = tuple(rulefuncs[rule])
@@ -66,11 +66,11 @@ def expects(rule):
     
     return tuple(list(rule_definition[rule]) + ["everything else"])
     
-def getrules(rule, rule_funcs = createrulefuncs()):
+def getrules(rule, rule_funcs = rulecompiler()):
     """
     Returns a tuple of functions which can be used to test a count and return the index of the correct word form
     """
-    # maintenance note: createrulefuncs() is expensive and should only
+    # maintenance note: rulecompiler() is expensive and should only
     # be called once, that's why it's a default parameter
     return rule_funcs[rule]
     
@@ -79,12 +79,18 @@ def index(count, rule):
     """
     Determines the index into a wordlist for a particular count and rule.
     """
-    ruleset = getrules(rule)
+    try:
+        ruleset = getrules(rule)
+    except IndexError:
+        raise RuleError("Invalid rule requested: {0}".format(rule))
+        
     for idx in range(len(ruleset)):
         if ruleset[idx](count):
             return idx
     
-    raise RuleError("Could not locate a suitable rule")
+    # this should never happen because of the implied "everything else" at the
+    # end of each rule
+    raise RuleError("Could not locate a suitable rule function")
 
 class RuleError(Exception):
     pass

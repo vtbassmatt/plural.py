@@ -1,5 +1,5 @@
 import unittest
-from plural import endsin, pluralize, expects
+from plural import endsin, pluralize, expects, RuleError
 
 class TestEndsIn(unittest.TestCase):
 
@@ -43,6 +43,10 @@ class TestPluralize(unittest.TestCase):
         self.LATVIAN = 3
         self.sgwordlist = ("word0", "word1", "word2", "word3")
         self.SCOTTISHGAELIC = 4
+        self.INVALID = 500
+    
+    def test_failure(self):
+        self.assertRaises(RuleError, pluralize, self.wordlist, 0, self.INVALID)
     
     def test_rule0(self):            
         self.assertEqual(pluralize(self.wordlist, 0, self.CHINESE), "word")
