@@ -38,12 +38,11 @@ def createrulefuncs():
     global rule_definition
     rulefuncs = []
     for rule in rule_definition:
-        #print "rule", rule
         rulefuncs.insert(rule, [])
         for str in rule_definition[rule]:
-            str = "lambda count: " + str + "\n"
-            #print "::", str
+            str = "lambda count: " + str
             rulefuncs[rule].append(eval(compile(str, '<string>', 'eval')))
+        rulefuncs[rule] = tuple(rulefuncs[rule])
     return tuple(rulefuncs)
 
 def expects(rule):
