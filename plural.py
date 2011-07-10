@@ -34,7 +34,7 @@ _rule_definition = {
         "count == 0 or endsinanyof(count, strrange('01',19))",),
     
     # rule 6: Lithuanian (ends in 1 but is not 11, ends in 0 or 10-20, everything else)
-    6: ("endsin1(count) and count != 11",
+    6: ("endsin1(count) and not endsin11(count)",
         "endsin0(count) or endsinanyof(count, strrange('10',11))",),
 }
 
@@ -125,6 +125,10 @@ def _endsin(value, finaldigit):
 def endsin1(value):
     """Returns true if a value ends in 1."""
     return _endsin(value, 1)
+
+def endsin11(value):
+    """Returns true if a value ends in 11."""
+    return _endsin(value, 11)
 
 def endsin0(value):
     """Returns true if a value ends in 0."""

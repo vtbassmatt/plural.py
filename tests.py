@@ -1,5 +1,5 @@
 import unittest
-from plural import _endsin, endsin1, endsin0, endsinanyof, \
+from plural import _endsin, endsin1, endsin0, endsin11, endsinanyof, \
                    pluralize, explain, strrange, RuleError
 
 # _endsin is an internal method, but there are expected to be several
@@ -57,9 +57,9 @@ class TestEndsIn(unittest.TestCase):
         self.assertRaises(TypeError, _endsin, "blah", 0)
         self.assertRaises(TypeError, _endsin, 1.5, 1)
 
-class TestEndsIn1(unittest.TestCase):
+class TestPublicEndsIn(unittest.TestCase):
     
-    def test_basic(self):
+    def test_1(self):
         self.assertTrue(endsin1(1))
         self.assertTrue(endsin1(-1))
         self.assertTrue(endsin1(101))
@@ -67,10 +67,8 @@ class TestEndsIn1(unittest.TestCase):
         self.assertFalse(endsin1(100))
         self.assertFalse(endsin1(111111110))
         self.assertFalse(endsin1(-2))
-
-class TestEndsIn0(unittest.TestCase):
     
-    def test_basic(self):
+    def test_0(self):
         self.assertFalse(endsin0(1))
         self.assertFalse(endsin0(-1))
         self.assertFalse(endsin0(101))
@@ -79,6 +77,15 @@ class TestEndsIn0(unittest.TestCase):
         self.assertTrue(endsin0(111111110))
         self.assertFalse(endsin0(-2))
 
+    def test_11(self):
+        self.assertTrue(endsin11(11))
+        self.assertTrue(endsin11(-11))
+        self.assertTrue(endsin11(111))
+        self.assertFalse(endsin11(0))
+        self.assertFalse(endsin11(100))
+        self.assertFalse(endsin11(1111111101))
+        self.assertFalse(endsin11(-2))
+    
 class TestEndsInAnyOf(unittest.TestCase):
     
     def test_basic(self):
@@ -119,9 +126,8 @@ class TestPluralize(unittest.TestCase):
         self.FRENCH  = 2
         self.LATVIAN = 3
         self.SCOTTISHGAELIC = 4
-        self.ROMANIAN   = 5
-        self.LITHUANIAN = 6
-        self.INVALID = 500
+        self.ROMANIAN = 5
+        self.INVALID  = 500
     
     def test_failure(self):
         self.assertRaises(RuleError, pluralize, self.wordlist, 0, self.INVALID)
@@ -178,21 +184,146 @@ class TestPluralize(unittest.TestCase):
         self.assertEqual(pluralize(self.threewordlist,  99, self.ROMANIAN), "word2")
         self.assertEqual(pluralize(self.threewordlist, 100, self.ROMANIAN), "word2")
         self.assertEqual(pluralize(self.threewordlist, 101, self.ROMANIAN), "word1")
+        self.assertEqual(pluralize(self.threewordlist, 109, self.ROMANIAN), "word1")
 
-    def test_rule6(self):
-        self.assertEqual(pluralize(self.threewordlist,   0, self.LITHUANIAN), "word1")
-        self.assertEqual(pluralize(self.threewordlist,   1, self.LITHUANIAN), "word0")
-        self.assertEqual(pluralize(self.threewordlist,   2, self.LITHUANIAN), "word2")
-        self.assertEqual(pluralize(self.threewordlist,   9, self.LITHUANIAN), "word2")
-        self.assertEqual(pluralize(self.threewordlist,  10, self.LITHUANIAN), "word1")
-        self.assertEqual(pluralize(self.threewordlist,  11, self.LITHUANIAN), "word1")
-        self.assertEqual(pluralize(self.threewordlist,  19, self.LITHUANIAN), "word1")
-        self.assertEqual(pluralize(self.threewordlist,  20, self.LITHUANIAN), "word1")
-        self.assertEqual(pluralize(self.threewordlist,  21, self.LITHUANIAN), "word0")
-        self.assertEqual(pluralize(self.threewordlist,  99, self.LITHUANIAN), "word2")
-        self.assertEqual(pluralize(self.threewordlist, 100, self.LITHUANIAN), "word1")
-        self.assertEqual(pluralize(self.threewordlist, 101, self.LITHUANIAN), "word0")
-        self.assertEqual(pluralize(self.threewordlist, 110, self.LITHUANIAN), "word1")
+class TestRule6(unittest.TestCase):
+    """For rule 6, more coverage according to the samples given by Mozilla"""
+
+    def test_Form0(self):
+        words = ("word0", "word1", "word2")
+        self.assertEqual(pluralize(words,   1, 6), "word0")
+        self.assertEqual(pluralize(words,  21, 6), "word0")
+        self.assertEqual(pluralize(words,  31, 6), "word0")
+        self.assertEqual(pluralize(words,  41, 6), "word0")
+        self.assertEqual(pluralize(words,  51, 6), "word0")
+        self.assertEqual(pluralize(words,  61, 6), "word0")
+        self.assertEqual(pluralize(words,  71, 6), "word0")
+        self.assertEqual(pluralize(words,  81, 6), "word0")
+        self.assertEqual(pluralize(words,  91, 6), "word0")
+        self.assertEqual(pluralize(words, 101, 6), "word0")
+        self.assertEqual(pluralize(words, 121, 6), "word0")
+        self.assertEqual(pluralize(words, 131, 6), "word0")
+        self.assertEqual(pluralize(words, 141, 6), "word0")
+        self.assertEqual(pluralize(words, 151, 6), "word0")
+        self.assertEqual(pluralize(words, 161, 6), "word0")
+        self.assertEqual(pluralize(words, 171, 6), "word0")
+        self.assertEqual(pluralize(words, 181, 6), "word0")
+        self.assertEqual(pluralize(words, 191, 6), "word0")
+        self.assertEqual(pluralize(words, 201, 6), "word0")
+        self.assertEqual(pluralize(words, 221, 6), "word0")
+        self.assertEqual(pluralize(words, 231, 6), "word0")
+        self.assertEqual(pluralize(words, 241, 6), "word0")
+        self.assertEqual(pluralize(words, 251, 6), "word0")
+        self.assertEqual(pluralize(words, 261, 6), "word0")
+        self.assertEqual(pluralize(words, 271, 6), "word0")
+        self.assertEqual(pluralize(words, 281, 6), "word0")
+        self.assertEqual(pluralize(words, 291, 6), "word0")
+
+    def test_Form1(self):
+        words = ("word0", "word1", "word2")
+        self.assertEqual(pluralize(words,   0, 6), "word1")
+        self.assertEqual(pluralize(words,  10, 6), "word1")
+        self.assertEqual(pluralize(words,  11, 6), "word1")
+        self.assertEqual(pluralize(words,  12, 6), "word1")
+        self.assertEqual(pluralize(words,  13, 6), "word1")
+        self.assertEqual(pluralize(words,  14, 6), "word1")
+        self.assertEqual(pluralize(words,  15, 6), "word1")
+        self.assertEqual(pluralize(words,  16, 6), "word1")
+        self.assertEqual(pluralize(words,  17, 6), "word1")
+        self.assertEqual(pluralize(words,  18, 6), "word1")
+        self.assertEqual(pluralize(words,  19, 6), "word1")
+        self.assertEqual(pluralize(words,  20, 6), "word1")
+        self.assertEqual(pluralize(words,  30, 6), "word1")
+        self.assertEqual(pluralize(words,  40, 6), "word1")
+        self.assertEqual(pluralize(words,  50, 6), "word1")
+        self.assertEqual(pluralize(words,  60, 6), "word1")
+        self.assertEqual(pluralize(words,  70, 6), "word1")
+        self.assertEqual(pluralize(words,  80, 6), "word1")
+        self.assertEqual(pluralize(words,  90, 6), "word1")
+        self.assertEqual(pluralize(words, 100, 6), "word1")
+        self.assertEqual(pluralize(words, 110, 6), "word1")
+        self.assertEqual(pluralize(words, 111, 6), "word1")
+        self.assertEqual(pluralize(words, 112, 6), "word1")
+        self.assertEqual(pluralize(words, 113, 6), "word1")
+        self.assertEqual(pluralize(words, 114, 6), "word1")
+        self.assertEqual(pluralize(words, 115, 6), "word1")
+        self.assertEqual(pluralize(words, 116, 6), "word1")
+        self.assertEqual(pluralize(words, 117, 6), "word1")
+        self.assertEqual(pluralize(words, 118, 6), "word1")
+        self.assertEqual(pluralize(words, 119, 6), "word1")
+        self.assertEqual(pluralize(words, 120, 6), "word1")
+        self.assertEqual(pluralize(words, 130, 6), "word1")
+        self.assertEqual(pluralize(words, 140, 6), "word1")
+        self.assertEqual(pluralize(words, 150, 6), "word1")
+        self.assertEqual(pluralize(words, 160, 6), "word1")
+        self.assertEqual(pluralize(words, 170, 6), "word1")
+        self.assertEqual(pluralize(words, 180, 6), "word1")
+        self.assertEqual(pluralize(words, 190, 6), "word1")
+        self.assertEqual(pluralize(words, 200, 6), "word1")
+        self.assertEqual(pluralize(words, 210, 6), "word1")
+        self.assertEqual(pluralize(words, 211, 6), "word1")
+        self.assertEqual(pluralize(words, 212, 6), "word1")
+        self.assertEqual(pluralize(words, 213, 6), "word1")
+        self.assertEqual(pluralize(words, 214, 6), "word1")
+        self.assertEqual(pluralize(words, 215, 6), "word1")
+        self.assertEqual(pluralize(words, 216, 6), "word1")
+        self.assertEqual(pluralize(words, 217, 6), "word1")
+        self.assertEqual(pluralize(words, 218, 6), "word1")
+        self.assertEqual(pluralize(words, 219, 6), "word1")
+        self.assertEqual(pluralize(words, 220, 6), "word1")
+
+    def test_Form2(self):
+        words = ("word0", "word1", "word2")
+        self.assertEqual(pluralize(words,   2, 6), "word2")
+        self.assertEqual(pluralize(words,   3, 6), "word2")
+        self.assertEqual(pluralize(words,   4, 6), "word2")
+        self.assertEqual(pluralize(words,   5, 6), "word2")
+        self.assertEqual(pluralize(words,   6, 6), "word2")
+        self.assertEqual(pluralize(words,   7, 6), "word2")
+        self.assertEqual(pluralize(words,   8, 6), "word2")
+        self.assertEqual(pluralize(words,   9, 6), "word2")
+        self.assertEqual(pluralize(words,  22, 6), "word2")
+        self.assertEqual(pluralize(words,  23, 6), "word2")
+        self.assertEqual(pluralize(words,  24, 6), "word2")
+        self.assertEqual(pluralize(words,  25, 6), "word2")
+        self.assertEqual(pluralize(words,  26, 6), "word2")
+        self.assertEqual(pluralize(words,  27, 6), "word2")
+        self.assertEqual(pluralize(words,  28, 6), "word2")
+        self.assertEqual(pluralize(words,  29, 6), "word2")
+        self.assertEqual(pluralize(words,  32, 6), "word2")
+        self.assertEqual(pluralize(words,  33, 6), "word2")
+        self.assertEqual(pluralize(words,  34, 6), "word2")
+        self.assertEqual(pluralize(words,  35, 6), "word2")
+        self.assertEqual(pluralize(words,  36, 6), "word2")
+        self.assertEqual(pluralize(words,  37, 6), "word2")
+        self.assertEqual(pluralize(words,  38, 6), "word2")
+        self.assertEqual(pluralize(words,  39, 6), "word2")
+        self.assertEqual(pluralize(words,  42, 6), "word2")
+        self.assertEqual(pluralize(words,  43, 6), "word2")
+        self.assertEqual(pluralize(words,  44, 6), "word2")
+        self.assertEqual(pluralize(words,  45, 6), "word2")
+        self.assertEqual(pluralize(words,  46, 6), "word2")
+        self.assertEqual(pluralize(words,  47, 6), "word2")
+        self.assertEqual(pluralize(words,  48, 6), "word2")
+        self.assertEqual(pluralize(words,  49, 6), "word2")
+        self.assertEqual(pluralize(words,  52, 6), "word2")
+        self.assertEqual(pluralize(words,  53, 6), "word2")
+        self.assertEqual(pluralize(words,  54, 6), "word2")
+        self.assertEqual(pluralize(words,  55, 6), "word2")
+        self.assertEqual(pluralize(words,  56, 6), "word2")
+        self.assertEqual(pluralize(words,  57, 6), "word2")
+        self.assertEqual(pluralize(words,  58, 6), "word2")
+        self.assertEqual(pluralize(words,  59, 6), "word2")
+        self.assertEqual(pluralize(words,  62, 6), "word2")
+        self.assertEqual(pluralize(words,  63, 6), "word2")
+        self.assertEqual(pluralize(words,  64, 6), "word2")
+        self.assertEqual(pluralize(words,  65, 6), "word2")
+        self.assertEqual(pluralize(words,  66, 6), "word2")
+        self.assertEqual(pluralize(words,  67, 6), "word2")
+        self.assertEqual(pluralize(words,  68, 6), "word2")
+        self.assertEqual(pluralize(words,  69, 6), "word2")
+        self.assertEqual(pluralize(words,  72, 6), "word2")
+        self.assertEqual(pluralize(words,  73, 6), "word2")
 
 class TestExplain(unittest.TestCase):
     
