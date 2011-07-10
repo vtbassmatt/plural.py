@@ -94,6 +94,7 @@ def index(count, rule):
     raise RuleError("Could not locate a suitable rule function")
 
 class RuleError(Exception):
+    """Represents an error locating or applying a language rule"""
     pass
 
 def _endsin(value, finaldigit):

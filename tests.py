@@ -2,6 +2,12 @@ import unittest
 from plural import _endsin, endsin1, endsin0, endsin11, endsinanyof, \
                    pluralize, explain, strrange, rulefor, RuleError
 
+class TestHighLevel(unittest.TestCase):
+    
+    def test_basic(self):
+        self.assertEqual(pluralize(('apple','apples'), 1, rulefor('en')), 'apple')
+        self.assertEqual(pluralize(('apple','apples'), 2, rulefor('en')), 'apples')
+
 # _endsin is an internal method, but there are expected to be several
 # public-facing wrappers so it's worth having good test cases
 class TestEndsIn(unittest.TestCase):
