@@ -106,13 +106,25 @@ def _endsin(value, finaldigit):
     if value % 1 != 0:
         raise TypeError("value should be an integer")
     
+    if int(finaldigit) < 0:
+        raise IndexError("finaldigit should be a positive integer")
+    
     # invert the sign of negative numbers
     if value < 0:
         value = value * -1
         
-    # remove the 10s digit and up
-    testdigit = value - ((value / 10) * 10)
-    return testdigit == finaldigit
+    if finaldigit < 10:
+        # remove the 10s digit and up
+        testdigit = value - ((value / 10) * 10)
+        return testdigit == int(finaldigit)
+    elif int(finaldigit) < 100:
+        # remove the 100s digit and up, convert to string
+        testdigits = str(value - ((value / 100) * 100))
+        if len(testdigits) < 2:
+            testdigits = "0" + testdigits
+        return testdigits == str(finaldigit)
+    else:
+        raise IndexError("_endsin only handles 1 and 2 digit tests")
 
 def endsin1(value):
     """

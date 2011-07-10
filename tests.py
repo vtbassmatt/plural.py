@@ -34,7 +34,17 @@ class TestEndsIn(unittest.TestCase):
         self.assertTrue(_endsin(101, "01"))
         self.assertTrue(_endsin(102, "02"))
         self.assertTrue(_endsin(  2, "02"))
+        self.assertTrue(_endsin( 20, "20"))
+        self.assertTrue(_endsin( 99, "99"))
+        self.assertTrue(_endsin( 99, 99))
+        self.assertTrue(_endsin(199, "99"))
+        self.assertTrue(_endsin(199, 99))
+        self.assertFalse(_endsin( 22, "02"))
         self.assertFalse(_endsin(121, "01"))
+    
+    def test_negative_twodigit(self):
+        self.assertTrue(_endsin(-102, "02"))
+        self.assertTrue(_endsin(  -2, "02"))
     
     def test_typeerror(self):
         self.assertRaises(TypeError, _endsin, "blah", 0)
