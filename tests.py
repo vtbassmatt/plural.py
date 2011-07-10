@@ -119,7 +119,8 @@ class TestPluralize(unittest.TestCase):
         self.FRENCH  = 2
         self.LATVIAN = 3
         self.SCOTTISHGAELIC = 4
-        self.ROMANIAN = 5
+        self.ROMANIAN   = 5
+        self.LITHUANIAN = 6
         self.INVALID = 500
     
     def test_failure(self):
@@ -178,6 +179,21 @@ class TestPluralize(unittest.TestCase):
         self.assertEqual(pluralize(self.threewordlist, 100, self.ROMANIAN), "word2")
         self.assertEqual(pluralize(self.threewordlist, 101, self.ROMANIAN), "word1")
 
+    def test_rule6(self):
+        self.assertEqual(pluralize(self.threewordlist,   0, self.LITHUANIAN), "word1")
+        self.assertEqual(pluralize(self.threewordlist,   1, self.LITHUANIAN), "word0")
+        self.assertEqual(pluralize(self.threewordlist,   2, self.LITHUANIAN), "word2")
+        self.assertEqual(pluralize(self.threewordlist,   9, self.LITHUANIAN), "word2")
+        self.assertEqual(pluralize(self.threewordlist,  10, self.LITHUANIAN), "word1")
+        self.assertEqual(pluralize(self.threewordlist,  11, self.LITHUANIAN), "word1")
+        self.assertEqual(pluralize(self.threewordlist,  19, self.LITHUANIAN), "word1")
+        self.assertEqual(pluralize(self.threewordlist,  20, self.LITHUANIAN), "word1")
+        self.assertEqual(pluralize(self.threewordlist,  21, self.LITHUANIAN), "word0")
+        self.assertEqual(pluralize(self.threewordlist,  99, self.LITHUANIAN), "word2")
+        self.assertEqual(pluralize(self.threewordlist, 100, self.LITHUANIAN), "word1")
+        self.assertEqual(pluralize(self.threewordlist, 101, self.LITHUANIAN), "word0")
+        self.assertEqual(pluralize(self.threewordlist, 110, self.LITHUANIAN), "word1")
+
 class TestExplain(unittest.TestCase):
     
     def test_failure(self):
@@ -193,9 +209,10 @@ class TestExplain(unittest.TestCase):
         self.assertEqual(len(explain(2)), 2)
 
     def test_3forms(self):
-        # expect rule 3, 5 to have 3 forms
+        # expect rule 3, 5-6 to have 3 forms
         self.assertEqual(len(explain(3)), 3)
         self.assertEqual(len(explain(5)), 3)
+        self.assertEqual(len(explain(6)), 3)
     
     def test_4forms(self):
         # expect rule 4 to have 4 forms

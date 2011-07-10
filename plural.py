@@ -32,6 +32,10 @@ _rule_definition = {
     # rule 5: Romanian (1, 0 + 01-19, everything else)
     5: ("count == 1",
         "count == 0 or endsinanyof(count, strrange('01',19))",),
+    
+    # rule 6: Lithuanian (ends in 1 but is not 11, ends in 0 or 10-20, everything else)
+    6: ("endsin1(count) and count != 11",
+        "endsin0(count) or endsinanyof(count, strrange('10',11))",),
 }
 
 def _rulecompiler():
