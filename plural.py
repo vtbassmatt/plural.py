@@ -4,12 +4,10 @@ https://developer.mozilla.org/en/Localization_and_Plurals
 """
 
 def pluralize(wordlist, count, rule):
-    """
-    Determines the correct pluralization of a word.
+    """Determines the correct pluralization of a word.
     
     Expects a word list/tuple (in a particular order, depending on the rule),
-    a count of things, and a rule to follow.
-    """
+    a count of things, and a rule to follow."""
     return wordlist[index(count, rule)]
 
 # The rule compiler will automatically infer an "everything else" clause at
@@ -35,7 +33,8 @@ _rule_definition = {
     
     # rule 5: Romanian (1, 0 + 01-19, everything else)
     5: ("count == 1",
-        "count == 0 or endsinanyof(count, ('01','02','03','04','05','06','07','08','09',10,11,12,13,14,15,16,17,18,19))",),
+        "count == 0 or endsinanyof(count, map(lambda x: '0' + str(x), range(1,10)) + map(str, range(10,20)))",),
+        #"count == 0 or endsinanyof(count, ('01','02','03','04','05','06','07','08','09',10,11,12,13,14,15,16,17,18,19))",),
 }
 
 def _rulecompiler():
@@ -59,9 +58,7 @@ def _rulecompiler():
     return tuple(rulefuncs)
 
 def explain(rule):
-    """
-    Returns a description of the expected word list for a rule.
-    """
+    """Returns a description of the expected word list for a rule."""
     global _rule_definition
     
     # special case rule 0, since there's no "else"
@@ -74,18 +71,14 @@ def explain(rule):
         raise RuleError("Invalid rule requested: {0}".format(rule))
     
 def _getrules(rule, rule_funcs = _rulecompiler()):
-    """
-    Returns a tuple of functions which can be used to test a count and return the index of the correct word form
-    """
+    """Returns a tuple of functions which can be used to test a count and return the index of the correct word form"""
     # maintenance note: _rulecompiler() is expensive and should only
     # be called once, that's why it's a default parameter
     return rule_funcs[rule]
     
 
 def index(count, rule):
-    """
-    Determines the index into a wordlist for a particular count and rule.
-    """
+    """Determines the index into a wordlist for a particular count and rule."""
     try:
         ruleset = _getrules(rule)
     except IndexError:
@@ -103,9 +96,7 @@ class RuleError(Exception):
     pass
 
 def _endsin(value, finaldigit):
-    """
-    Returns true if a particular value ends in a particular digit.
-    """
+    """Returns true if a particular value ends in a particular digit."""
     # ensure we're dealing with an integer
     if value % 1 != 0:
         raise TypeError("value should be an integer")
@@ -131,19 +122,14 @@ def _endsin(value, finaldigit):
         raise IndexError("_endsin only handles 1 and 2 digit tests")
 
 def endsin1(value):
-    """
-    Returns true if a value ends in 1.
-    """
+    """Returns true if a value ends in 1."""
     return _endsin(value, 1)
 
 def endsin0(value):
-    """
-    Returns true if a value ends in 0.
-    """
+    """Returns true if a value ends in 0."""
     return _endsin(value, 0)
 
 def endsinanyof(value, suffixes):
-    """
-    Returns true if a value ends in any of the suffixes.
-    """
-    return True in [_endsin(value, suffix) for suffix in suffixes]
+    """Returns true if a value ends in any of the suffixes."""
+    return any([_endsin(value, suffix) for suffix in suffixes])
+

@@ -86,6 +86,15 @@ class TestEndsInAnyOf(unittest.TestCase):
         self.assertTrue(endsinanyof(1, (1, 2, "01")))
         self.assertFalse(endsinanyof(1, ()))
 
+    def test_more(self):
+        self.assertTrue(endsinanyof(101, ("01","02")))
+        self.assertFalse(endsinanyof(101, ("03","02")))
+        self.assertTrue(endsinanyof(0, ("00", "01","02")))
+        self.assertFalse(endsinanyof(0, ("01","02")))
+        self.assertTrue(endsinanyof(1, ("01",)))
+        self.assertTrue(endsinanyof(0, ("00",)))
+        self.assertFalse(endsinanyof(0, ("01",)))
+
 class TestPluralize(unittest.TestCase):
 
     def setUp(self):
