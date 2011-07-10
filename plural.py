@@ -98,13 +98,13 @@ def index(count, rule):
 class RuleError(Exception):
     pass
 
-def endsin(value, finaldigit):
+def _endsin(value, finaldigit):
     """
     Returns true if a particular value ends in a particular digit.
     """
     # ensure we're dealing with an integer
     if value % 1 != 0:
-        raise TypeError("count should be an integer")
+        raise TypeError("value should be an integer")
     
     # invert the sign of negative numbers
     if value < 0:
@@ -118,4 +118,4 @@ def endsin1(value):
     """
     Returns true if a value ends in 1.
     """
-    return endsin(value, 1)
+    return _endsin(value, 1)

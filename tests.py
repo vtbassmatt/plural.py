@@ -1,36 +1,55 @@
 import unittest
-from plural import endsin, pluralize, explain, RuleError
+from plural import _endsin, endsin1, pluralize, explain, RuleError
 
+# _endsin is an internal method, but there are expected to be several
+# public-facing wrappers so it's worth having good test cases
 class TestEndsIn(unittest.TestCase):
 
     def test_basic(self):
-        self.assertTrue(endsin(  0, 0))
-        self.assertTrue(endsin( 10, 0))
-        self.assertTrue(endsin(100, 0))
-        self.assertTrue(endsin(  1, 1))
-        self.assertTrue(endsin( 11, 1))
-        self.assertTrue(endsin(101, 1))
-        self.assertTrue(endsin(  2, 2))
-        self.assertTrue(endsin( 12, 2))
-        self.assertTrue(endsin(102, 2))
-        self.assertFalse(endsin(  2, 1))
-        self.assertFalse(endsin( 12, 1))
-        self.assertFalse(endsin(102, 1))
+        self.assertTrue(_endsin(  0, 0))
+        self.assertTrue(_endsin( 10, 0))
+        self.assertTrue(_endsin(100, 0))
+        self.assertTrue(_endsin(  1, 1))
+        self.assertTrue(_endsin( 11, 1))
+        self.assertTrue(_endsin(101, 1))
+        self.assertTrue(_endsin(  2, 2))
+        self.assertTrue(_endsin( 12, 2))
+        self.assertTrue(_endsin(102, 2))
+        self.assertFalse(_endsin(  2, 1))
+        self.assertFalse(_endsin( 12, 1))
+        self.assertFalse(_endsin(102, 1))
         
     def test_negative(self):
-        self.assertTrue(endsin(  -1, 1))
-        self.assertTrue(endsin( -11, 1))
-        self.assertTrue(endsin(-101, 1))
-        self.assertTrue(endsin(  -2, 2))
-        self.assertTrue(endsin( -12, 2))
-        self.assertTrue(endsin(-102, 2))
-        self.assertFalse(endsin(  -2, 1))
-        self.assertFalse(endsin( -12, 1))
-        self.assertFalse(endsin(-102, 1))
+        self.assertTrue(_endsin(  -1, 1))
+        self.assertTrue(_endsin( -11, 1))
+        self.assertTrue(_endsin(-101, 1))
+        self.assertTrue(_endsin(  -2, 2))
+        self.assertTrue(_endsin( -12, 2))
+        self.assertTrue(_endsin(-102, 2))
+        self.assertFalse(_endsin(  -2, 1))
+        self.assertFalse(_endsin( -12, 1))
+        self.assertFalse(_endsin(-102, 1))
+    
+    def test_twodigit(self):
+        self.assertTrue(_endsin(101, "01"))
+        self.assertTrue(_endsin(102, "02"))
+        self.assertTrue(_endsin(  2, "02"))
+        self.assertFalse(_endsin(121, "01"))
     
     def test_typeerror(self):
-        self.assertRaises(TypeError, endsin, "blah", 0)
-        self.assertRaises(TypeError, endsin, 1.5, 1)
+        self.assertRaises(TypeError, _endsin, "blah", 0)
+        self.assertRaises(TypeError, _endsin, 1.5, 1)
+
+class TestEndsIn1(unittest.TestCase):
+    
+    def test_basic(self):
+        self.assertTrue(endsin1(1))
+        self.assertTrue(endsin1(-1))
+        self.assertTrue(endsin1(101))
+        self.assertFalse(endsin1(0))
+        self.assertFalse(endsin1(100))
+        self.assertFalse(endsin1(111111110))
+        self.assertFalse(endsin1(-2))
 
 class TestPluralize(unittest.TestCase):
 
