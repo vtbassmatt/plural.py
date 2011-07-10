@@ -32,6 +32,10 @@ _rule_definition = {
     4: ("count == 1 or count == 11",
         "count == 2 or count == 12",
         "count >= 3 and count <= 19",),
+    
+    # rule 5: Romanian (1, 0 + 01-19, everything else)
+    5: ("count == 1",
+        "count == 0 or endsinanyof(count, ('01','02','03','04','05','06','07','08','09',10,11,12,13,14,15,16,17,18,19))",),
 }
 
 def _rulecompiler():
@@ -131,3 +135,15 @@ def endsin1(value):
     Returns true if a value ends in 1.
     """
     return _endsin(value, 1)
+
+def endsin0(value):
+    """
+    Returns true if a value ends in 0.
+    """
+    return _endsin(value, 0)
+
+def endsinanyof(value, suffixes):
+    """
+    Returns true if a value ends in any of the suffixes.
+    """
+    return True in [_endsin(value, suffix) for suffix in suffixes]

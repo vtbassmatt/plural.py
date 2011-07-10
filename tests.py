@@ -1,5 +1,5 @@
 import unittest
-from plural import _endsin, endsin1, pluralize, explain, RuleError
+from plural import _endsin, endsin1, endsin0, endsinanyof, pluralize, explain, RuleError
 
 # _endsin is an internal method, but there are expected to be several
 # public-facing wrappers so it's worth having good test cases
@@ -42,6 +42,12 @@ class TestEndsIn(unittest.TestCase):
         self.assertFalse(_endsin( 22, "02"))
         self.assertFalse(_endsin(121, "01"))
     
+    def test_zeroes_twodigit(self):
+        self.assertTrue(_endsin(100, "00"))
+        self.assertTrue(_endsin(0, "00"))
+        self.assertTrue(_endsin(1000, "00"))
+        self.assertFalse(_endsin(101, "00"))
+    
     def test_negative_twodigit(self):
         self.assertTrue(_endsin(-102, "02"))
         self.assertTrue(_endsin(  -2, "02"))
@@ -60,6 +66,25 @@ class TestEndsIn1(unittest.TestCase):
         self.assertFalse(endsin1(100))
         self.assertFalse(endsin1(111111110))
         self.assertFalse(endsin1(-2))
+
+class TestEndsIn0(unittest.TestCase):
+    
+    def test_basic(self):
+        self.assertFalse(endsin0(1))
+        self.assertFalse(endsin0(-1))
+        self.assertFalse(endsin0(101))
+        self.assertTrue(endsin0(0))
+        self.assertTrue(endsin0(100))
+        self.assertTrue(endsin0(111111110))
+        self.assertFalse(endsin0(-2))
+
+class TestEndsInAnyOf(unittest.TestCase):
+    
+    def test_basic(self):
+        self.assertTrue(endsinanyof(1, ("01","02")))
+        self.assertFalse(endsinanyof(1, ("99","02")))
+        self.assertTrue(endsinanyof(1, (1, 2, "01")))
+        self.assertFalse(endsinanyof(1, ()))
 
 class TestPluralize(unittest.TestCase):
 
@@ -118,6 +143,9 @@ class TestPluralize(unittest.TestCase):
         self.assertEqual(pluralize(self.sgwordlist, 19, self.SCOTTISHGAELIC), "word2")
         self.assertEqual(pluralize(self.sgwordlist, 20, self.SCOTTISHGAELIC), "word3")
         self.assertEqual(pluralize(self.sgwordlist, 21, self.SCOTTISHGAELIC), "word3")
+    
+    def test_rule5(self):
+        self.assertEqual("NEED TO WRITE TEST CASES FOR ROMANIAN","")
 
 class TestExplain(unittest.TestCase):
     
