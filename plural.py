@@ -33,7 +33,7 @@ _rule_definition = {
     5: ("count == 1",
         "count == 0 or endsinanyof(count, strrange('01',19))",),
     
-    # rule 6: Lithuanian (ends in 1 but is not 11, ends in 0 or 10-20, everything else)
+    # rule 6: Lithuanian (ends in 1 but not 11, ends in 0 or 10-20, everything else)
     6: ("endsin1(count) and not endsin11(count)",
         "endsin0(count) or endsinanyof(count, strrange('10',11))",),
 }
@@ -144,3 +144,44 @@ def strrange(start, count):
     formatstr = "{{0:0{0}}}".format(len(start))
     # build and return the list
     return [formatstr.format(x) for x in range(int(start), int(start) + count)]
+
+def rulefor(langcode):
+    """Returns the rule for a particular language code
+    
+    Constructed from the languages given in the Mozilla document and the
+    tool at http://rishida.net/utils/subtags/"""
+    langcode = str.lower(langcode)
+    
+    # Asian (Chinese, Japanese, Korean, Vietnamese), Persian, Turkic/Altaic
+    # (Turkish), Thai, Lao
+    if langcode in ('zh','ja','ko','vi','fa','tr','th','lo'):
+        return 0
+    
+    # Germanic (Danish, Dutch, English, Faroese, Frisian, German, Norwegian,
+    # Swedish), Finno-Ugric (Estonian, Finnish, Hungarian), Language isolate
+    # (Basque), Latin/Greek (Greek), Semitic (Hebrew), Romanic (Italian,
+    # Portuguese, Spanish, Catalan)
+    if langcode in ('da','nl','en','fo','fy','de','nb','nn','no','sv',
+                    'et','fi','hu','eu','el','he','it','es','ca',
+                    'pt','pt-pt','pt_pt'):
+        return 1
+    
+    # Romanic (French, Brazilian Portuguese)
+    if langcode in ('fr', 'pt_br', 'pt-br'):
+        return 2
+    
+    # Baltic (Latvian)
+    if langcode in ('lv',):
+        return 3
+    
+    # Celtic (Scottish Gaelic)
+    if langcode in ('gd',):
+        return 4
+    
+    # Romanic (Romanian)
+    if langcode in ('ro',):
+        return 5
+    
+    # Baltic (Lithuanian)
+    if langcode in ('lt',):
+        return 6

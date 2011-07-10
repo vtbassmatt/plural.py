@@ -1,6 +1,6 @@
 import unittest
 from plural import _endsin, endsin1, endsin0, endsin11, endsinanyof, \
-                   pluralize, explain, strrange, RuleError
+                   pluralize, explain, strrange, rulefor, RuleError
 
 # _endsin is an internal method, but there are expected to be several
 # public-facing wrappers so it's worth having good test cases
@@ -187,7 +187,7 @@ class TestPluralize(unittest.TestCase):
         self.assertEqual(pluralize(self.threewordlist, 109, self.ROMANIAN), "word1")
 
 class TestRule6(unittest.TestCase):
-    """For rule 6, more coverage according to the samples given by Mozilla"""
+    """For rule 6, more coverage using the samples given by Mozilla"""
 
     def test_Form0(self):
         words = ("word0", "word1", "word2")
@@ -348,6 +348,16 @@ class TestExplain(unittest.TestCase):
     def test_4forms(self):
         # expect rule 4 to have 4 forms
         self.assertEqual(len(explain(4)), 4)
+
+class TestRuleFor(unittest.TestCase):
+
+    def test_basic(self):
+        self.assertEqual(rulefor('en'), 1)
+        self.assertEqual(rulefor('EN'), 1)
+        self.assertEqual(rulefor('lt'), 6)
+        
+    def test_more(self):
+        self.assertEqual(rulefor('klingon'), None)
 
 if __name__ == '__main__':
     unittest.main()
