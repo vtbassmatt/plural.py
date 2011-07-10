@@ -1,7 +1,7 @@
 import unittest
 from plural import endsin, pluralize, explain, RuleError
 
-class Testendsin(unittest.TestCase):
+class TestEndsIn(unittest.TestCase):
 
     def test_basic(self):
         self.assertTrue(endsin(  0, 0))
