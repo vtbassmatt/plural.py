@@ -186,3 +186,39 @@ def rulefor(langcode):
     # Baltic (Lithuanian)
     if langcode in ('lt',):
         return 6
+    
+    # Slavic (Croatian, Serbian, Russian, Ukrainian)
+    if langcode in ('hr','sr','ru','uk'):
+        return 7
+    
+    # Slavic (Slovak, Czech)
+    if langcode in ('sk','cs'):
+        return 8
+    
+    # Slavic (Polish)
+    if langcode in ('pl',):
+        return 9
+    
+    # Slavic (Slovenian, Sorbian)
+    if langcode in ('sl','wen','dsb','hsb'):
+        return 10
+    
+    # Celtic (Irish Gaeilge)
+    if langcode in ('ga',):
+        return 11
+    
+    # Semitic (Arabic)
+    if langcode in ('ar',):
+        return 12
+    
+    # Semitic (Maltese)
+    if langcode in ('mt',):
+        return 13
+    
+    # Slavic (Macedonian)
+    if langcode in ('mk',):
+        return 14
+    
+    # Icelandic 
+    if langcode in ('is',):
+        return 15

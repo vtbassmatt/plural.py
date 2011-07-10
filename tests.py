@@ -361,6 +361,7 @@ class TestRuleFor(unittest.TestCase):
         self.assertEqual(rulefor('en'), 1)
         self.assertEqual(rulefor('EN'), 1)
         self.assertEqual(rulefor('lt'), 6)
+        self.assertEqual(rulefor('is'), 15)
         
     def test_more(self):
         self.assertEqual(rulefor('klingon'), None)
