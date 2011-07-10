@@ -1,7 +1,5 @@
-"""
-An implementation of Mozilla's plural forms
-https://developer.mozilla.org/en/Localization_and_Plurals
-"""
+"""An implementation of Mozilla's plural forms
+https://developer.mozilla.org/en/Localization_and_Plurals"""
 
 def pluralize(wordlist, count, rule):
     """Determines the correct pluralization of a word.
@@ -33,8 +31,7 @@ _rule_definition = {
     
     # rule 5: Romanian (1, 0 + 01-19, everything else)
     5: ("count == 1",
-        "count == 0 or endsinanyof(count, map(lambda x: '0' + str(x), range(1,10)) + map(str, range(10,20)))",),
-        #"count == 0 or endsinanyof(count, ('01','02','03','04','05','06','07','08','09',10,11,12,13,14,15,16,17,18,19))",),
+        "count == 0 or endsinanyof(count, strrange('01',19))",),
 }
 
 def _rulecompiler():
@@ -133,3 +130,9 @@ def endsinanyof(value, suffixes):
     """Returns true if a value ends in any of the suffixes."""
     return any([_endsin(value, suffix) for suffix in suffixes])
 
+def strrange(start, count):
+    """Returns a range of numbers in string format, padded with 0s"""
+    # create a formatstring that will pad with the proper amount of zeroes
+    formatstr = "{{0:0{0}}}".format(len(start))
+    # build and return the list
+    return [formatstr.format(x) for x in range(int(start), int(start) + count)]

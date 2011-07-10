@@ -1,5 +1,6 @@
 import unittest
-from plural import _endsin, endsin1, endsin0, endsinanyof, pluralize, explain, RuleError
+from plural import _endsin, endsin1, endsin0, endsinanyof, \
+                   pluralize, explain, strrange, RuleError
 
 # _endsin is an internal method, but there are expected to be several
 # public-facing wrappers so it's worth having good test cases
@@ -94,6 +95,18 @@ class TestEndsInAnyOf(unittest.TestCase):
         self.assertTrue(endsinanyof(1, ("01",)))
         self.assertTrue(endsinanyof(0, ("00",)))
         self.assertFalse(endsinanyof(0, ("01",)))
+
+class TestStrRange(unittest.TestCase):
+    
+    def test_basic(self):
+        self.assertEqual(strrange("00",2), ["00","01"])
+        self.assertEqual(strrange("00",10), ["00","01","02","03","04","05","06","07","08","09"])
+        self.assertEqual(strrange("01",10), ["01","02","03","04","05","06","07","08","09","10"])
+
+    def test_more(self):
+        self.assertEqual(strrange("99",2), ["99","100"])
+        self.assertEqual(strrange("099",2), ["099","100"])
+        self.assertEqual(strrange("0000",2), ["0000","0001"])
 
 class TestPluralize(unittest.TestCase):
 
