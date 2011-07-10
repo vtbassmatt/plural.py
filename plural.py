@@ -36,6 +36,10 @@ _rule_definition = {
     # rule 6: Lithuanian (ends in 1 but not 11, ends in 0 or 10-20, everything else)
     6: ("endsin1(count) and not endsin11(count)",
         "endsin0(count) or endsinanyof(count, strrange('10',11))",),
+    
+    # rule 7: Russian (ends in 1 but not 11, ends in 2-4 but not 12-14, everything else)
+    7: ("endsin1(count) and not endsin11(count)",
+        "endsinanyof(count, strrange('2',3)) and not endsinanyof(count, strrange('12',3))",),
 }
 
 def _rulecompiler():
@@ -109,17 +113,20 @@ def _endsin(value, finaldigit):
     # invert the sign of negative numbers
     if value < 0:
         value = value * -1
-        
-    if finaldigit < 10:
+    
+    # coerce to string, all remaining comparisons will be stringwise
+    finaldigit = str(finaldigit)
+    
+    if len(finaldigit) < 2:
         # remove the 10s digit and up
-        testdigit = value - ((value / 10) * 10)
-        return testdigit == int(finaldigit)
-    elif int(finaldigit) < 100:
+        testdigit = str(value - ((value / 10) * 10))
+        return testdigit == finaldigit
+    elif len(finaldigit) < 3:
         # remove the 100s digit and up, convert to string
         testdigits = str(value - ((value / 100) * 100))
         if len(testdigits) < 2:
             testdigits = "0" + testdigits
-        return testdigits == str(finaldigit)
+        return testdigits == finaldigit
     else:
         raise IndexError("_endsin only handles 1 and 2 digit tests")
 
