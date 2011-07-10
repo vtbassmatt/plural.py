@@ -92,6 +92,9 @@ class TestPluralize(unittest.TestCase):
 
 class TestExplain(unittest.TestCase):
     
+    def test_failure(self):
+        self.assertRaises(RuleError, explain, 500)
+
     def test_1form(self):
         # expect rule 0 to have 1 form
         self.assertEqual(len(explain(0)), 1)

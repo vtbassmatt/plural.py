@@ -64,7 +64,10 @@ def explain(rule):
     if rule == 0:
         return ("everything",)
     
-    return tuple(list(_rule_definition[rule]) + ["everything else"])
+    try:
+        return tuple(list(_rule_definition[rule]) + ["everything else"])
+    except KeyError:
+        raise RuleError("Invalid rule requested: {0}".format(rule))
     
 def _getrules(rule, rule_funcs = _rulecompiler()):
     """
