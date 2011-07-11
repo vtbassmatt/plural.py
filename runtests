@@ -1,7 +1,12 @@
 #!/bin/sh
-echo Running PUBLIC suite \
-  && python publictests.py \
-  && echo Running PRIVATE suite \
-  && python privatetests.py \
-  && echo Running SERVICE suite \
-  && python pluralservicetests.py
+
+# if there is a virtual environment, use it
+env/bin/python `which nosetests`
+
+# otherwise
+#echo Running PUBLIC suite \
+#  && python public-test.py \
+#  && echo Running PRIVATE suite \
+#  && python private-test.py \
+#  && echo Running SERVICE suite \
+#  && python service-test.py
