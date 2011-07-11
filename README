@@ -1,0 +1,6 @@
+To make pluralservice work, Flask must be installed:
+
+- install VirtualEnv (sudo easy_install virtualenv)
+- create an environment (virtualenv env)
+- switch to the environment (. env/bin/activate)
+- install Flask (easy_install Flask)
