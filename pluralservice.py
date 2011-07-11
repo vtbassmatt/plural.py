@@ -6,18 +6,26 @@ app = Flask(__name__)
 @app.route('/language/<langcode>')
 def rulefor_service(langcode):
     langcode = str(langcode)
-    rule = rulefor(langcode) or 'null'
-    return '{{"langcode":"{0}", "rule":{1} }}'.format(langcode, rule)
+    rule = rulefor(langcode) or None
+    
+    response = {"langcode":langcode, "rule": rule}
+    
+    return json.dumps(response)
 
 @app.route('/rule/<int:rule>')
 def explain_service(rule):
+
+    response = {"rule":rule}
+    
     try:
-        explanation = explain(rule)
-        translations = len(explanation)
+        response["explanation"] = explain(rule)
+        response["translations_required"] = len(explain(rule))
     except RuleError:
-        explanation = 'null'
-        translations = 0
-    return '{{"rule":{0}, "translations_required":{2}, "explanation":{1} }}'.format(rule, explanation, translations)
+        response["explanation"] = None
+        response["translations_required"] = 0
+        response["error"] = "Invalid rule specified"
+    
+    return json.dumps(response)
 
 @app.route('/pluralize')
 def pluralize_service():
