@@ -40,6 +40,15 @@ _rule_definition = {
     # rule 7: Russian (ends in 1 but not 11, ends in 2-4 but not 12-14, everything else)
     7: ("endsin1(count) and not endsin11(count)",
         "endsinanyof(count, strrange('2',3)) and not endsinanyof(count, strrange('12',3))",),
+    
+    # rule 8: Slovak (is 1, is 2-4, everything else)
+    8: ("count == 1",
+        "count in (2,3,4)",),
+    
+    # rule 9: Polish (is 1, ends in 2-4 but not 12-14, everything else)
+    9: ("count == 1",
+        "endsinanyof(count, (2,3,4)) and not endsinanyof(count, (12,13,14))",),
+    
 }
 
 def _rulecompiler():
