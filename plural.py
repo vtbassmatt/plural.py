@@ -15,39 +15,39 @@ _rule_definition = {
     0: ( ),
     
     # rule 1: Germanic/English 2-forms (singular, plural)
-    1: ("count == 1", ),
+    1: ("amount == 1", ),
     
     # rule 2: Romance (0/1 singular, plural)
-    2: ("count == 0 or count == 1", ),
+    2: ("amount == 0 or amount == 1", ),
     
     # rule 3: Latvian (0, ends in 1 other than 11, everything else)
-    3: ("count == 0",
-        "endsin1(count) and count != 11",),
+    3: ("amount == 0",
+        "endsin1(amount) and amount != 11",),
     
     # rule 4: Scottish Gaelic (1/11, 2/12, 3-19, everything else)
-    4: ("count == 1 or count == 11",
-        "count == 2 or count == 12",
-        "count >= 3 and count <= 19",),
+    4: ("amount == 1 or amount == 11",
+        "amount == 2 or amount == 12",
+        "amount >= 3 and amount <= 19",),
     
     # rule 5: Romanian (1, 0 + 01-19, everything else)
-    5: ("count == 1",
-        "count == 0 or endsinanyof(count, strrange('01',19))",),
+    5: ("amount == 1",
+        "amount == 0 or endsinanyof(amount, strrange('01',19))",),
     
     # rule 6: Lithuanian (ends in 1 but not 11, ends in 0 or 10-20, everything else)
-    6: ("endsin1(count) and not endsin11(count)",
-        "endsin0(count) or endsinanyof(count, strrange('10',11))",),
+    6: ("endsin1(amount) and not endsin11(amount)",
+        "endsin0(amount) or endsinanyof(amount, strrange('10',11))",),
     
     # rule 7: Russian (ends in 1 but not 11, ends in 2-4 but not 12-14, everything else)
-    7: ("endsin1(count) and not endsin11(count)",
-        "endsinanyof(count, strrange('2',3)) and not endsinanyof(count, strrange('12',3))",),
+    7: ("endsin1(amount) and not endsin11(amount)",
+        "endsinanyof(amount, strrange('2',3)) and not endsinanyof(amount, strrange('12',3))",),
     
     # rule 8: Slovak (is 1, is 2-4, everything else)
-    8: ("count == 1",
-        "count in (2,3,4)",),
+    8: ("amount == 1",
+        "amount in (2,3,4)",),
     
     # rule 9: Polish (is 1, ends in 2-4 but not 12-14, everything else)
-    9: ("count == 1",
-        "endsinanyof(count, (2,3,4)) and not endsinanyof(count, (12,13,14))",),
+    9: ("amount == 1",
+        "endsinanyof(amount, (2,3,4)) and not endsinanyof(amount, (12,13,14))",),
     
 }
 
@@ -61,11 +61,11 @@ def _rulecompiler():
         rulefuncs.insert(rule, [])
         # read each rule function definition
         for str in _rule_definition[rule]:
-            str = "lambda count: " + str
+            str = "lambda amount: " + str
             # compile the rule function and put it into the rule fns list
             rulefuncs[rule].append(eval(compile(str, '<string>', 'eval')))
         # for each rule, there's an implied "everything else" at the end
-        rulefuncs[rule].append(lambda count: True)
+        rulefuncs[rule].append(lambda amount: True)
         # convert to a tuple for immutability
         rulefuncs[rule] = tuple(rulefuncs[rule])
     # convert to a tuple for immutability
