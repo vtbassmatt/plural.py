@@ -2,4 +2,6 @@
 echo Running PUBLIC suite \
   && python publictests.py \
   && echo Running PRIVATE suite \
-  && python privatetests.py
+  && python privatetests.py \
+  && echo Running SERVICE suite \
+  && python pluralservicetests.py
