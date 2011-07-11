@@ -1,4 +1,4 @@
-from flask import Flask, request, json
+from flask import Flask, request, json, make_response
 from plural import pluralize, explain, rulefor, RuleError
 
 app = Flask(__name__)
@@ -9,8 +9,12 @@ def rulefor_service(langcode):
     rule = rulefor(langcode) or None
     
     response = {"langcode":langcode, "rule": rule}
+    if rule is None:
+        response["error"] = "Invalid language specified"
     
-    return json.dumps(response)
+    response = make_response(json.dumps(response))
+    response.mimetype = 'application/json'
+    return response
 
 @app.route('/rule/<int:rule>')
 def explain_service(rule):
@@ -25,7 +29,9 @@ def explain_service(rule):
         response["translations_required"] = 0
         response["error"] = "Invalid rule specified"
     
-    return json.dumps(response)
+    response = make_response(json.dumps(response))
+    response.mimetype = 'application/json'
+    return response
 
 @app.route('/pluralize')
 def pluralize_service():
@@ -45,7 +51,9 @@ def pluralize_service():
         response["word"] = None
         response["error"] = "Invalid rule specified"
         
-    return json.dumps(response)
+    response = make_response(json.dumps(response))
+    response.mimetype = 'application/json'
+    return response
 
 if __name__ == '__main__':
     app.run(debug=True)
