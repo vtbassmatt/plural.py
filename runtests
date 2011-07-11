@@ -1,0 +1,5 @@
+#!/bin/sh
+echo Running PUBLIC suite \
+  && python publictests.py \
+  && echo Running PRIVATE suite \
+  && python privatetests.py
