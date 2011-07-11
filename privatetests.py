@@ -1,5 +1,5 @@
 import unittest
-from plural import _endsin, endsin1, endsin0, endsin11, endsinanyof, strrange, RuleError
+from plural import _endsin, endsin1, endsin0, endsin11, endsinanyof, strrange
 
 # _endsin is an internal method, but there are expected to be several
 # public-facing wrappers so it's worth having good test cases
