@@ -10,7 +10,7 @@ def pluralize(wordlist, count, rule):
 
 # The rule compiler will automatically infer an "everything else" clause at
 # the end of each rule
-_rule_definition = {
+__rule_definition = {
     # rule 0: Asian, only one form
     0: ( ),
     
@@ -49,18 +49,23 @@ _rule_definition = {
     9: ("amount == 1",
         "endsinanyof(amount, (2,3,4)) and not endsinanyof(amount, (12,13,14))",),
     
+    # rule 10: Slovenian (ends in 01, ends in 02, ends in 03 or 04, everything else)
+    10: ("endsin01(amount)",
+        "endsin02(amount)",
+        "endsin03(amount) or endsin04(amount)",),
+    
 }
 
-def _rulecompiler():
+def __rulecompiler():
     # bring in the rule definitions
-    global _rule_definition
+    global __rule_definition
     
     rulefuncs = []
     # read each rule definition
-    for rule in _rule_definition:
+    for rule in __rule_definition:
         rulefuncs.insert(rule, [])
         # read each rule function definition
-        for str in _rule_definition[rule]:
+        for str in __rule_definition[rule]:
             str = "lambda amount: " + str
             # compile the rule function and put it into the rule fns list
             rulefuncs[rule].append(eval(compile(str, '<string>', 'eval')))
@@ -73,20 +78,20 @@ def _rulecompiler():
 
 def explain(rule):
     """Returns a description of the expected word list for a rule."""
-    global _rule_definition
+    global __rule_definition
     
     # special case rule 0, since there's no "else"
     if rule == 0:
         return ("everything",)
     
     try:
-        return tuple(list(_rule_definition[rule]) + ["everything else"])
+        return tuple(list(__rule_definition[rule]) + ["everything else"])
     except KeyError:
         raise RuleError("Invalid rule requested: {0}".format(rule))
     
-def _getrules(rule, rule_funcs = _rulecompiler()):
+def __getrules(rule, rule_funcs = __rulecompiler()):
     """Returns a tuple of functions which can be used to test a count and return the index of the correct word form"""
-    # maintenance note: _rulecompiler() is expensive and should only
+    # maintenance note: __rulecompiler() is expensive and should only
     # be called once, that's why it's a default parameter
     return rule_funcs[rule]
     
@@ -94,7 +99,7 @@ def _getrules(rule, rule_funcs = _rulecompiler()):
 def index(count, rule):
     """Determines the index into a wordlist for a particular count and rule."""
     try:
-        ruleset = _getrules(rule)
+        ruleset = __getrules(rule)
     except IndexError:
         raise RuleError("Invalid rule requested: {0}".format(rule))
         
@@ -142,6 +147,22 @@ def _endsin(value, finaldigit):
 def endsin1(value):
     """Returns true if a value ends in 1."""
     return _endsin(value, 1)
+
+def endsin01(value):
+    """Returns true if a value ends in 01."""
+    return _endsin(value, "01")
+
+def endsin02(value):
+    """Returns true if a value ends in 02."""
+    return _endsin(value, "02")
+
+def endsin03(value):
+    """Returns true if a value ends in 03."""
+    return _endsin(value, "03")
+
+def endsin04(value):
+    """Returns true if a value ends in 04."""
+    return _endsin(value, "04")
 
 def endsin11(value):
     """Returns true if a value ends in 11."""

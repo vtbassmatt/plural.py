@@ -135,9 +135,10 @@ class TestPluralize(unittest.TestCase):
         self.FRENCH  = 2
         self.LATVIAN = 3
         self.SCOTTISHGAELIC = 4
-        self.ROMANIAN = 5
-        self.SLOVAK   = 8
-        self.INVALID  = 500
+        self.ROMANIAN  = 5
+        self.SLOVAK    = 8
+        self.SLOVENIAN = 10
+        self.INVALID   = 500
     
     def test_failure(self):
         self.assertRaises(RuleError, pluralize, self.wordlist, 0, self.INVALID)
@@ -203,6 +204,20 @@ class TestPluralize(unittest.TestCase):
         self.assertEqual(pluralize(self.threewordlist,   3, self.SLOVAK), "word1")
         self.assertEqual(pluralize(self.threewordlist,   4, self.SLOVAK), "word1")
         self.assertEqual(pluralize(self.threewordlist,   5, self.SLOVAK), "word2")
+
+    def test_rule10(self):
+        self.assertEqual(pluralize(self.fourwordlist,   0, self.SLOVENIAN), "word3")
+        self.assertEqual(pluralize(self.fourwordlist,   1, self.SLOVENIAN), "word0")
+        self.assertEqual(pluralize(self.fourwordlist,   2, self.SLOVENIAN), "word1")
+        self.assertEqual(pluralize(self.fourwordlist,   3, self.SLOVENIAN), "word2")
+        self.assertEqual(pluralize(self.fourwordlist,   4, self.SLOVENIAN), "word2")
+        self.assertEqual(pluralize(self.fourwordlist,   5, self.SLOVENIAN), "word3")
+        self.assertEqual(pluralize(self.fourwordlist, 100, self.SLOVENIAN), "word3")
+        self.assertEqual(pluralize(self.fourwordlist, 101, self.SLOVENIAN), "word0")
+        self.assertEqual(pluralize(self.fourwordlist, 102, self.SLOVENIAN), "word1")
+        self.assertEqual(pluralize(self.fourwordlist, 103, self.SLOVENIAN), "word2")
+        self.assertEqual(pluralize(self.fourwordlist, 104, self.SLOVENIAN), "word2")
+        self.assertEqual(pluralize(self.fourwordlist, 105, self.SLOVENIAN), "word3")
 
 class TestRule6(unittest.TestCase):
     """For rule 6, more coverage using the samples given by Mozilla"""
@@ -546,8 +561,9 @@ class TestExplain(unittest.TestCase):
         self.assertEqual(len(explain(9)), 3)
     
     def test_4forms(self):
-        # expect rule 4 to have 4 forms
+        # expect rule 4, 10 to have 4 forms
         self.assertEqual(len(explain(4)), 4)
+        self.assertEqual(len(explain(10)), 4)
 
 class TestRuleFor(unittest.TestCase):
 
