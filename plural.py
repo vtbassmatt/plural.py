@@ -1,12 +1,110 @@
 """An implementation of Mozilla's plural forms
-https://developer.mozilla.org/en/Localization_and_Plurals"""
+https://developer.mozilla.org/en/Localization_and_Plurals
+
+The public API consists of three methods:
+- pluralize
+- explain
+- rulefor"""
 
 def pluralize(wordlist, count, rule):
     """Determines the correct pluralization of a word.
     
     Expects a word list/tuple (in a particular order, depending on the rule),
     a count of things, and a rule to follow."""
-    return wordlist[index(count, rule)]
+    return wordlist[__index(count, rule)]
+
+def explain(rule):
+    """Returns a description of the expected word list for a rule."""
+
+    # bring the rule defs into scope
+    global __rule_definition
+    
+    # special case rule 0, since there's no "else" needed
+    if rule == 0:
+        return ("everything",)
+    
+    try:
+        return tuple(list(__rule_definition[rule]) + ["everything else"])
+    except KeyError:
+        raise RuleError("Invalid rule requested: {0}".format(rule))
+    
+def rulefor(langcode):
+    """Returns the rule for a particular language code
+    
+    Constructed from the languages given in the Mozilla document and the
+    tool at http://rishida.net/utils/subtags/"""
+    
+    langcode = str.lower(langcode)
+    
+    # Asian (Chinese, Japanese, Korean, Vietnamese), Persian, Turkic/Altaic
+    # (Turkish), Thai, Lao
+    if langcode in ('zh','ja','ko','vi','fa','tr','th','lo'):
+        return 0
+    
+    # Germanic (Danish, Dutch, English, Faroese, Frisian, German, Norwegian,
+    # Swedish), Finno-Ugric (Estonian, Finnish, Hungarian), Language isolate
+    # (Basque), Latin/Greek (Greek), Semitic (Hebrew), Romanic (Italian,
+    # Portuguese, Spanish, Catalan)
+    if langcode in ('da','nl','en','fo','fy','de','nb','nn','no','sv',
+                    'et','fi','hu','eu','el','he','it','es','ca',
+                    'pt','pt-pt','pt_pt'):
+        return 1
+    
+    # Romanic (French, Brazilian Portuguese)
+    if langcode in ('fr', 'pt_br', 'pt-br'):
+        return 2
+    
+    # Baltic (Latvian)
+    if langcode in ('lv',):
+        return 3
+    
+    # Celtic (Scottish Gaelic)
+    if langcode in ('gd',):
+        return 4
+    
+    # Romanic (Romanian)
+    if langcode in ('ro',):
+        return 5
+    
+    # Baltic (Lithuanian)
+    if langcode in ('lt',):
+        return 6
+    
+    # Slavic (Croatian, Serbian, Russian, Ukrainian)
+    if langcode in ('hr','sr','ru','uk'):
+        return 7
+    
+    # Slavic (Slovak, Czech)
+    if langcode in ('sk','cs'):
+        return 8
+    
+    # Slavic (Polish)
+    if langcode in ('pl',):
+        return 9
+    
+    # Slavic (Slovenian, Sorbian)
+    if langcode in ('sl','wen','dsb','hsb'):
+        return 10
+    
+    # Celtic (Irish Gaeilge)
+    if langcode in ('ga',):
+        return 11
+    
+    # Semitic (Arabic)
+    if langcode in ('ar',):
+        return 12
+    
+    # Semitic (Maltese)
+    if langcode in ('mt',):
+        return 13
+    
+    # Slavic (Macedonian)
+    if langcode in ('mk',):
+        return 14
+    
+    # Icelandic 
+    if langcode in ('is',):
+        return 15
 
 # The rule compiler will automatically infer an "everything else" clause at
 # the end of each rule
@@ -76,19 +174,6 @@ def __rulecompiler():
     # convert to a tuple for immutability
     return tuple(rulefuncs)
 
-def explain(rule):
-    """Returns a description of the expected word list for a rule."""
-    global __rule_definition
-    
-    # special case rule 0, since there's no "else"
-    if rule == 0:
-        return ("everything",)
-    
-    try:
-        return tuple(list(__rule_definition[rule]) + ["everything else"])
-    except KeyError:
-        raise RuleError("Invalid rule requested: {0}".format(rule))
-    
 def __getrules(rule, rule_funcs = __rulecompiler()):
     """Returns a tuple of functions which can be used to test a count and return the index of the correct word form"""
     # maintenance note: __rulecompiler() is expensive and should only
@@ -96,7 +181,7 @@ def __getrules(rule, rule_funcs = __rulecompiler()):
     return rule_funcs[rule]
     
 
-def index(count, rule):
+def __index(count, rule):
     """Determines the index into a wordlist for a particular count and rule."""
     try:
         ruleset = __getrules(rule)
@@ -182,80 +267,3 @@ def strrange(start, count):
     formatstr = "{{0:0{0}}}".format(len(start))
     # build and return the list
     return [formatstr.format(x) for x in range(int(start), int(start) + count)]
-
-def rulefor(langcode):
-    """Returns the rule for a particular language code
-    
-    Constructed from the languages given in the Mozilla document and the
-    tool at http://rishida.net/utils/subtags/"""
-    langcode = str.lower(langcode)
-    
-    # Asian (Chinese, Japanese, Korean, Vietnamese), Persian, Turkic/Altaic
-    # (Turkish), Thai, Lao
-    if langcode in ('zh','ja','ko','vi','fa','tr','th','lo'):
-        return 0
-    
-    # Germanic (Danish, Dutch, English, Faroese, Frisian, German, Norwegian,
-    # Swedish), Finno-Ugric (Estonian, Finnish, Hungarian), Language isolate
-    # (Basque), Latin/Greek (Greek), Semitic (Hebrew), Romanic (Italian,
-    # Portuguese, Spanish, Catalan)
-    if langcode in ('da','nl','en','fo','fy','de','nb','nn','no','sv',
-                    'et','fi','hu','eu','el','he','it','es','ca',
-                    'pt','pt-pt','pt_pt'):
-        return 1
-    
-    # Romanic (French, Brazilian Portuguese)
-    if langcode in ('fr', 'pt_br', 'pt-br'):
-        return 2
-    
-    # Baltic (Latvian)
-    if langcode in ('lv',):
-        return 3
-    
-    # Celtic (Scottish Gaelic)
-    if langcode in ('gd',):
-        return 4
-    
-    # Romanic (Romanian)
-    if langcode in ('ro',):
-        return 5
-    
-    # Baltic (Lithuanian)
-    if langcode in ('lt',):
-        return 6
-    
-    # Slavic (Croatian, Serbian, Russian, Ukrainian)
-    if langcode in ('hr','sr','ru','uk'):
-        return 7
-    
-    # Slavic (Slovak, Czech)
-    if langcode in ('sk','cs'):
-        return 8
-    
-    # Slavic (Polish)
-    if langcode in ('pl',):
-        return 9
-    
-    # Slavic (Slovenian, Sorbian)
-    if langcode in ('sl','wen','dsb','hsb'):
-        return 10
-    
-    # Celtic (Irish Gaeilge)
-    if langcode in ('ga',):
-        return 11
-    
-    # Semitic (Arabic)
-    if langcode in ('ar',):
-        return 12
-    
-    # Semitic (Maltese)
-    if langcode in ('mt',):
-        return 13
-    
-    # Slavic (Macedonian)
-    if langcode in ('mk',):
-        return 14
-    
-    # Icelandic 
-    if langcode in ('is',):
-        return 15
