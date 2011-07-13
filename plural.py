@@ -152,6 +152,12 @@ __rule_definition = {
         "endsin02(amount)",
         "endsin03(amount) or endsin04(amount)",),
     
+    # rule 11: Irish Gaeilge (1, 2, 3-6, 7-10, everything else)
+    11: ("amount == 1",
+        "amount == 2",
+        "amount >= 3 and amount <= 6",
+        "amount >= 7 and amount <= 10",),
+    
 }
 
 def __rulecompiler():
