@@ -158,6 +158,14 @@ __rule_definition = {
         "amount >= 3 and amount <= 6",
         "amount >= 7 and amount <= 10",),
     
+    # Note for translators: rule 12 differs from the Mozilla implementation
+    # rule 12: Arabic (0, 1, 2, ends in 03-10, ends in 11-99, everything else)
+    12: ("amount == 0",
+        "amount == 1",
+        "amount == 2",
+        "endsinanyof(amount, strrange('03',8))",
+        "endsinanyof(amount, strrange('11',89))",),
+    
 }
 
 def __rulecompiler():

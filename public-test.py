@@ -14,6 +14,7 @@ class TestPluralize(unittest.TestCase):
         self.threewordlist = ("word0", "word1", "word2")
         self.fourwordlist = ("word0", "word1", "word2", "word3")
         self.fivewordlist = ("word0", "word1", "word2", "word3", "word4")
+        self.sixwordlist = ("word0", "word1", "word2", "word3", "word4", "word5")
         self.CHINESE = 0
         self.ENGLISH = 1
         self.FRENCH  = 2
@@ -23,6 +24,7 @@ class TestPluralize(unittest.TestCase):
         self.SLOVAK    = 8
         self.SLOVENIAN = 10
         self.IRISHGAELIC = 11
+        self.ARABIC      = 12
         self.INVALID   = 500
     
     def test_failure(self):
@@ -121,6 +123,53 @@ class TestPluralize(unittest.TestCase):
         self.assertEqual(pluralize(self.fivewordlist,  99, self.IRISHGAELIC), "word4")
         self.assertEqual(pluralize(self.fivewordlist, 100, self.IRISHGAELIC), "word4")
         self.assertEqual(pluralize(self.fivewordlist, 101, self.IRISHGAELIC), "word4")
+
+    def test_rule12(self):
+        self.assertEqual(pluralize(self.sixwordlist,   0, self.ARABIC), "word0")
+        self.assertEqual(pluralize(self.sixwordlist,   1, self.ARABIC), "word1")
+        self.assertEqual(pluralize(self.sixwordlist,   2, self.ARABIC), "word2")
+        self.assertEqual(pluralize(self.sixwordlist,   3, self.ARABIC), "word3")
+        self.assertEqual(pluralize(self.sixwordlist,   4, self.ARABIC), "word3")
+        self.assertEqual(pluralize(self.sixwordlist,   5, self.ARABIC), "word3")
+        self.assertEqual(pluralize(self.sixwordlist,   6, self.ARABIC), "word3")
+        self.assertEqual(pluralize(self.sixwordlist,   7, self.ARABIC), "word3")
+        self.assertEqual(pluralize(self.sixwordlist,   8, self.ARABIC), "word3")
+        self.assertEqual(pluralize(self.sixwordlist,   9, self.ARABIC), "word3")
+        self.assertEqual(pluralize(self.sixwordlist,  10, self.ARABIC), "word3")
+        self.assertEqual(pluralize(self.sixwordlist, 103, self.ARABIC), "word3")
+        self.assertEqual(pluralize(self.sixwordlist, 104, self.ARABIC), "word3")
+        self.assertEqual(pluralize(self.sixwordlist, 105, self.ARABIC), "word3")
+        self.assertEqual(pluralize(self.sixwordlist, 106, self.ARABIC), "word3")
+        self.assertEqual(pluralize(self.sixwordlist, 107, self.ARABIC), "word3")
+        self.assertEqual(pluralize(self.sixwordlist, 108, self.ARABIC), "word3")
+        self.assertEqual(pluralize(self.sixwordlist, 109, self.ARABIC), "word3")
+        self.assertEqual(pluralize(self.sixwordlist, 110, self.ARABIC), "word3")
+        self.assertEqual(pluralize(self.sixwordlist, 203, self.ARABIC), "word3")
+        self.assertEqual(pluralize(self.sixwordlist, 204, self.ARABIC), "word3")
+        self.assertEqual(pluralize(self.sixwordlist, 205, self.ARABIC), "word3")
+        self.assertEqual(pluralize(self.sixwordlist, 206, self.ARABIC), "word3")
+        self.assertEqual(pluralize(self.sixwordlist, 207, self.ARABIC), "word3")
+        self.assertEqual(pluralize(self.sixwordlist, 208, self.ARABIC), "word3")
+        self.assertEqual(pluralize(self.sixwordlist, 209, self.ARABIC), "word3")
+        self.assertEqual(pluralize(self.sixwordlist, 210, self.ARABIC), "word3")
+        self.assertEqual(pluralize(self.sixwordlist,  11, self.ARABIC), "word4")
+        self.assertEqual(pluralize(self.sixwordlist,  12, self.ARABIC), "word4")
+        self.assertEqual(pluralize(self.sixwordlist,  13, self.ARABIC), "word4")
+        self.assertEqual(pluralize(self.sixwordlist,  14, self.ARABIC), "word4")
+        self.assertEqual(pluralize(self.sixwordlist,  15, self.ARABIC), "word4")
+        self.assertEqual(pluralize(self.sixwordlist,  16, self.ARABIC), "word4")
+        self.assertEqual(pluralize(self.sixwordlist,  17, self.ARABIC), "word4")
+        self.assertEqual(pluralize(self.sixwordlist,  18, self.ARABIC), "word4")
+        self.assertEqual(pluralize(self.sixwordlist,  19, self.ARABIC), "word4")
+        self.assertEqual(pluralize(self.sixwordlist,  20, self.ARABIC), "word4")
+        self.assertEqual(pluralize(self.sixwordlist,  21, self.ARABIC), "word4")
+        self.assertEqual(pluralize(self.sixwordlist,  22, self.ARABIC), "word4")
+        self.assertEqual(pluralize(self.sixwordlist, 100, self.ARABIC), "word5")
+        self.assertEqual(pluralize(self.sixwordlist, 101, self.ARABIC), "word5")
+        self.assertEqual(pluralize(self.sixwordlist, 102, self.ARABIC), "word5")
+        self.assertEqual(pluralize(self.sixwordlist, 200, self.ARABIC), "word5")
+        self.assertEqual(pluralize(self.sixwordlist, 201, self.ARABIC), "word5")
+        self.assertEqual(pluralize(self.sixwordlist, 202, self.ARABIC), "word5")
 
 class TestRule6(unittest.TestCase):
     """For rule 6, more coverage using the samples given by Mozilla"""
@@ -471,6 +520,10 @@ class TestExplain(unittest.TestCase):
     def test_5forms(self):
         # expect rule 11 to have 5 forms
         self.assertEqual(len(explain(11)), 5)
+    
+    def test_6forms(self):
+        # expect rule 12 to have 6 forms
+        self.assertEqual(len(explain(12)), 6)
 
 class TestRuleFor(unittest.TestCase):
 

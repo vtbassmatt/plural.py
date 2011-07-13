@@ -1,6 +1,8 @@
 plural.py
 
-An implementation of Mozilla's plural forms in Python
+An implementation of Mozilla's plural forms* in Python.
+
+*Except rule 12, which differs in word order from Mozilla.
 
 Usage:
 
