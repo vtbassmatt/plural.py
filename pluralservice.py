@@ -3,7 +3,7 @@ from plural import pluralize, explain, rulefor, RuleError
 
 app = Flask(__name__)
 
-@app.route('/language/<langcode>')
+@app.route('/language/<langcode>/')
 def rulefor_service(langcode):
     langcode = str(langcode)
     rule = rulefor(langcode) or None
@@ -16,7 +16,7 @@ def rulefor_service(langcode):
     response.mimetype = 'application/json'
     return response
 
-@app.route('/rule/<int:rule>')
+@app.route('/rule/<int:rule>/')
 def explain_service(rule):
 
     response = {"rule":rule}
@@ -33,7 +33,7 @@ def explain_service(rule):
     response.mimetype = 'application/json'
     return response
 
-@app.route('/pluralize')
+@app.route('/pluralize/')
 def pluralize_service():
     wordlist = request.args.getlist('w')
     count = int(request.args['c'])
