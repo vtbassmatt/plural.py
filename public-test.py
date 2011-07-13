@@ -15,17 +15,18 @@ class TestPluralize(unittest.TestCase):
         self.fourwordlist = ("word0", "word1", "word2", "word3")
         self.fivewordlist = ("word0", "word1", "word2", "word3", "word4")
         self.sixwordlist = ("word0", "word1", "word2", "word3", "word4", "word5")
-        self.CHINESE = 0
-        self.ENGLISH = 1
-        self.FRENCH  = 2
-        self.LATVIAN = 3
+        self.CHINESE        = 0
+        self.ENGLISH        = 1
+        self.FRENCH         = 2
+        self.LATVIAN        = 3
         self.SCOTTISHGAELIC = 4
-        self.ROMANIAN  = 5
-        self.SLOVAK    = 8
-        self.SLOVENIAN = 10
-        self.IRISHGAELIC = 11
-        self.ARABIC      = 12
-        self.INVALID   = 500
+        self.ROMANIAN       = 5
+        self.SLOVAK         = 8
+        self.SLOVENIAN      = 10
+        self.IRISHGAELIC    = 11
+        self.ARABIC         = 12
+        self.ICELANDIC      = 15
+        self.INVALID        = 500
     
     def test_failure(self):
         self.assertRaises(RuleError, pluralize, self.wordlist, 0, self.INVALID)
@@ -170,6 +171,22 @@ class TestPluralize(unittest.TestCase):
         self.assertEqual(pluralize(self.sixwordlist, 200, self.ARABIC), "word5")
         self.assertEqual(pluralize(self.sixwordlist, 201, self.ARABIC), "word5")
         self.assertEqual(pluralize(self.sixwordlist, 202, self.ARABIC), "word5")
+
+    def test_rule15(self):
+        self.assertEqual(pluralize(self.wordlist,   0, self.ICELANDIC), "words")
+        self.assertEqual(pluralize(self.wordlist,   1, self.ICELANDIC), "word")
+        self.assertEqual(pluralize(self.wordlist,   2, self.ICELANDIC), "words")
+        self.assertEqual(pluralize(self.wordlist,   3, self.ICELANDIC), "words")
+        self.assertEqual(pluralize(self.wordlist,   4, self.ICELANDIC), "words")
+        self.assertEqual(pluralize(self.wordlist,   5, self.ICELANDIC), "words")
+        self.assertEqual(pluralize(self.wordlist,   6, self.ICELANDIC), "words")
+        self.assertEqual(pluralize(self.wordlist,   7, self.ICELANDIC), "words")
+        self.assertEqual(pluralize(self.wordlist,  10, self.ICELANDIC), "words")
+        self.assertEqual(pluralize(self.wordlist,  11, self.ICELANDIC), "words")
+        self.assertEqual(pluralize(self.wordlist,  12, self.ICELANDIC), "words")
+        self.assertEqual(pluralize(self.wordlist,  20, self.ICELANDIC), "words")
+        self.assertEqual(pluralize(self.wordlist,  21, self.ICELANDIC), "word")
+        self.assertEqual(pluralize(self.wordlist,  22, self.ICELANDIC), "words")
 
 class TestRule6(unittest.TestCase):
     """For rule 6, more coverage using the samples given by Mozilla"""
@@ -712,9 +729,10 @@ class TestExplain(unittest.TestCase):
         self.assertEqual(len(explain(0)), 1)
     
     def test_2forms(self):
-        # expect rule 1, 2 to have 2 forms
+        # expect rule 1, 2, 15 to have 2 forms
         self.assertEqual(len(explain(1)), 2)
         self.assertEqual(len(explain(2)), 2)
+        self.assertEqual(len(explain(15)), 2)
 
     def test_3forms(self):
         # expect rule 3, 5-9, 14 to have 3 forms

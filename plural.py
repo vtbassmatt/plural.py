@@ -175,6 +175,9 @@ __rule_definition = {
     14: ("endsin1(amount)",
         "endsin2(amount)",),
     
+    # rule 15: Icelandic (ends in 1 but not 11, everything else)
+    15: ("endsin1(amount) and not endsin11(amount)",),
+    
 }
 
 def __rulecompiler():
