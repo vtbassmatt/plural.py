@@ -166,6 +166,11 @@ __rule_definition = {
         "endsinanyof(amount, strrange('03',8))",
         "endsinanyof(amount, strrange('11',89))",),
     
+    # rule 13: Maltese (is 1, is 0 or ends in 01-10, ends in 11-19, everything else)
+    13: ("amount == 1",
+        "amount == 0 or endsinanyof(amount, strrange('01',10))",
+        "endsinanyof(amount, strrange('11',9))",),
+    
 }
 
 def __rulecompiler():
