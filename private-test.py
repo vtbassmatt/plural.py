@@ -1,5 +1,5 @@
 import unittest
-from plural import _endsin, endsin1, endsin0, endsin11, endsinanyof, strrange
+from plural import _endsin, endsin1, endsin2, endsin0, endsin11, endsinanyof, strrange
 
 # _endsin is an internal method, but there are expected to be several
 # public-facing wrappers so it's worth having good test cases
@@ -69,6 +69,15 @@ class TestPublicEndsIn(unittest.TestCase):
         self.assertFalse(endsin1(100))
         self.assertFalse(endsin1(111111110))
         self.assertFalse(endsin1(-2))
+    
+    def test_2(self):
+        self.assertTrue(endsin2(2))
+        self.assertTrue(endsin2(-2))
+        self.assertTrue(endsin2(102))
+        self.assertFalse(endsin2(0))
+        self.assertFalse(endsin2(100))
+        self.assertFalse(endsin2(111111110))
+        self.assertFalse(endsin2(-3))
     
     def test_0(self):
         self.assertFalse(endsin0(1))

@@ -171,6 +171,10 @@ __rule_definition = {
         "amount == 0 or endsinanyof(amount, strrange('01',10))",
         "endsinanyof(amount, strrange('11',9))",),
     
+    # rule 14: Macedonian (ends in 1, ends in 2, everything else)
+    14: ("endsin1(amount)",
+        "endsin2(amount)",),
+    
 }
 
 def __rulecompiler():
@@ -251,6 +255,10 @@ def _endsin(value, finaldigit):
 def endsin1(value):
     """Returns true if a value ends in 1."""
     return _endsin(value, 1)
+
+def endsin2(value):
+    """Returns true if a value ends in 2."""
+    return _endsin(value, 2)
 
 def endsin01(value):
     """Returns true if a value ends in 01."""
