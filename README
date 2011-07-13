@@ -13,9 +13,31 @@ Usage:
   print "plural.py expects the following translations for Irish Gaeilge:"
   print plural.explain(rulefor("ga"))
 
+
+
 To make pluralservice work, Flask must be installed:
 
 - install VirtualEnv (sudo easy_install virtualenv)
 - create an environment (virtualenv env)
 - switch to the environment (. env/bin/activate)
 - install Flask (easy_install Flask)
+
+The URLs are:
+  http://server/language/{langcode} - rulefor(langcode)
+  http://server/rule/{rule}         - explain(rule)
+  http://server/pluralize           - pluralize()
+
+Pluralize expects the following query parameters:
+  w: a word form, such as "bird" or "birds" (repeated as many times as needed)
+  c: count, the number of "w" requested
+  r: rule, the rule to apply
+
+Given that English is rule 1 (you can discover this by calling the /language/ service),
+requesting the translation for 2 birds would be:
+  http://server/pluralize?w=bird&w=birds&c=2&rule=1
+
+And the response would be:
+  {"count": 2, "word": "birds", "rule": 1}
+
+Errors are reported by nulling the response value and including an error string:
+  {"count": 2, "word": null, "rule": 42, "error": "Invalid rule specified"}
