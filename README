@@ -1,3 +1,18 @@
+plural.py
+
+An implementation of Mozilla's plural forms in Python
+
+Usage:
+
+  import plural
+  
+  translations = ("bird", "birds")
+  singular = plural.pluralize(translations, 1, rulefor("en"))
+  print "There is one {0}".format(singular)
+  
+  print "plural.py expects the following translations for Irish Gaeilge:"
+  print plural.explain(rulefor("ga"))
+
 To make pluralservice work, Flask must be installed:
 
 - install VirtualEnv (sudo easy_install virtualenv)
